@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/customer")
@@ -116,4 +118,58 @@ public class CustomerController {
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
+  @DeleteMapping("/delete")
+  public ResponseEntity<Object> deleteCustomer(String cpf){
+
+    Optional<CustomerModel> customerExists = customerRepository.findByCpf(cpf);
+
+    var objResponse = new Object() {
+      public HttpStatus status;
+      public String messageError;
+    };
+
+    // Verificando se o cliente existe
+    if(customerExists.isEmpty()){
+      objResponse.status = HttpStatus.NOT_FOUND;
+      objResponse.messageError = "Customer not found";
+      return ResponseEntity.status(objResponse.status).body(objResponse);
+    }
+
+    // Efetivando a exclusão do cliente
+    customerRepository.deleteByCpf(cpf);
+    objResponse.status = HttpStatus.OK;
+    objResponse.messageError = "Customer deleted successfully";
+    return ResponseEntity.status(objResponse.status).body(objResponse);
+  }
+
+  @GetMapping("/list")
+  public ResponseEntity<Object> getAllCustomers(){
+    List<CustomerModel> customers = customerRepository.findAll();
+    return ResponseEntity.status(HttpStatus.OK).body(customers);
+  }
+  @GetMapping("{param}")
+  public ResponseEntity<Object> getCustomerByCpf(@PathVariable String param){
+    Optional<CustomerModel> customer;
+
+    // Possibilitando a pesquisa de cliente peloID no banco de dados ou pelo cpf através da mesma rota
+    if(param.length()==11){
+      customer = customerRepository.findByCpf(param);
+    }else{
+      customer = customerRepository.findById(UUID.fromString(param));
+    }
+
+    // Verificando se o cliente existe no banco de dados
+    if(customer.isEmpty()){
+      var objResponse = new Object() {
+        public HttpStatus status;
+        public String messageError;
+      };
+
+      objResponse.status = HttpStatus.NOT_FOUND;
+      objResponse.messageError = "Customer not found";
+      return ResponseEntity.status(objResponse.status).body(objResponse);
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(customer);
+  }
 }
