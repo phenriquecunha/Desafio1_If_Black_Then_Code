@@ -20,7 +20,7 @@ public class CustomerModel {
   private String name;
   @Column(nullable = false)
   private String email;
-  @Column(nullable = false, length = 11)
+  @Column(nullable = false, length = 11, unique = true)
   private String cpf;
   @Column(nullable = false)
   private String tel;
