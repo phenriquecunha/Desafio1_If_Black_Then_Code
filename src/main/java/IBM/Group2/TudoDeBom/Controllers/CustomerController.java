@@ -131,9 +131,9 @@ public class CustomerController {
   @GetMapping("/list")
   public ResponseEntity<Object> getAllCustomers(){
     var customers = customerRepository.findAll();
-    return ResponseEntity.status(HttpStatus.OK).body(customers);
+    return ResponseEntity.ok().body(customers);
   }
-  @GetMapping("{param}")
+  @GetMapping("/{param}")
   public ResponseEntity<Object> getCustomerByCpf(@PathVariable String param){
     Optional<CustomerModel> customer;
 
@@ -156,6 +156,6 @@ public class CustomerController {
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
 
-    return ResponseEntity.status(HttpStatus.OK).body(customer);
+    return ResponseEntity.ok().body(customer);
   }
 }

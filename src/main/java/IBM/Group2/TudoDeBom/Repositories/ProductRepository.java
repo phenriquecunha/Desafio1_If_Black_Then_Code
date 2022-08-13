@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<ProductModel, UUID> {
   Optional<ProductModel> findByName(String name);
+
+  boolean existsByName(String name);
 }

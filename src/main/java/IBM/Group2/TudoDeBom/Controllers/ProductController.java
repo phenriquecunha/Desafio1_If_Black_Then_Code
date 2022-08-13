@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/product")
@@ -87,4 +88,61 @@ public class ProductController {
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<Object> deleteProduct(@PathVariable UUID id){
+
+    if(productRepository.existsById(id)){
+      productRepository.deleteById(id);
+      objResponse.status = HttpStatus.OK;
+      objResponse.messageError = "Product deleted successfully";
+      return ResponseEntity.status(objResponse.status).body(objResponse);
+    }
+
+    objResponse.status = HttpStatus.NOT_FOUND;
+    objResponse.messageError = "Product not found";
+    return ResponseEntity.status(objResponse.status).body(objResponse);
+  }
+
+  @GetMapping("/list")
+  public ResponseEntity<Object> getAllProducts(){
+    var products = productRepository.findAll();
+    return ResponseEntity.ok().body(products);
+  }
+
+  @GetMapping("/id/{id}")
+  public ResponseEntity<Object> getProductById(@PathVariable UUID id){
+    if(productRepository.existsById(id)){
+      return ResponseEntity.ok().body(productRepository.findById(id));
+    }
+
+    objResponse.status = HttpStatus.NOT_FOUND;
+    objResponse.messageError = "Product not found";
+    return ResponseEntity.status(objResponse.status).body(objResponse);
+  }
+
+  @GetMapping("/name/{name}")
+  public ResponseEntity<Object> getProductByName(@PathVariable String name){
+    if(productRepository.existsByName(name)){
+      return ResponseEntity.ok().body(productRepository.findByName(name));
+    }
+
+    objResponse.status = HttpStatus.NOT_FOUND;
+    objResponse.messageError = "Product not found";
+    return ResponseEntity.status(objResponse.status).body(objResponse);
+  }
+
+  @PostMapping("/{id}/add/{quantity}")
+  public ResponseEntity<Object> addQuantity(@PathVariable UUID id, @PathVariable int quantity){
+    var product = productRepository.findById(id);
+    if(product.isPresent()){
+      product.get().setStock_amount(quantity);
+      objResponse.status = HttpStatus.OK;
+      objResponse.messageError = "Product quantity in stock updated successfully";
+      return ResponseEntity.status(objResponse.status).body(objResponse);
+    }
+
+    objResponse.status = HttpStatus.NOT_FOUND;
+    objResponse.messageError = "Product not found";
+    return ResponseEntity.status(objResponse.status).body(objResponse);
+  }
 }
