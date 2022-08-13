@@ -8,5 +8,5 @@ public class ProductDto {
   private String name;
   private Double price;
   private boolean generic;
-  private int stockAmount;
+  private int stock_amount;
 }

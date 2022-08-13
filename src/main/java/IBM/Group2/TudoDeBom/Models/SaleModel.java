@@ -3,6 +3,7 @@ package IBM.Group2.TudoDeBom.Models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 @Data
@@ -27,5 +28,8 @@ public class SaleModel {
 
   @Column(nullable = false)
   private Double total_price;
+
+  @Column(nullable = false)
+  private LocalDateTime created_at;
 
 }
