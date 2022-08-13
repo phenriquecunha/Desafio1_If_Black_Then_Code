@@ -23,16 +23,13 @@ public class CustomerController {
   @Autowired
   CustomerRepository customerRepository;
 
+  ObjResponse objResponse = new ObjResponse();
+
   @PostMapping("/create")
   public ResponseEntity<Object> createCustomer(@RequestBody @Valid CustomerDto customer){
 
-    var objResponse = new Object(){
-      public HttpStatus status;
-      public String messageError;
-    };
-
     // Verificando se o cliente já existe no banco de dados
-    Optional<CustomerModel> customerExists = customerRepository.findByCpf(customer.getCpf());
+    var customerExists = customerRepository.findByCpf(customer.getCpf());
     if(customerExists.isPresent()){
       objResponse.status  = HttpStatus.FORBIDDEN;
       objResponse.messageError = "Customer already exists";
@@ -76,12 +73,7 @@ public class CustomerController {
   @PutMapping("/update")
   public ResponseEntity<Object> updateCustomer(@RequestBody @Valid CustomerDto customer) {
 
-    var objResponse = new Object() {
-      public HttpStatus status;
-      public String messageError;
-    };
-
-    Optional<CustomerModel> customerExists = customerRepository.findByCpf(customer.getCpf());
+    var customerExists = customerRepository.findByCpf(customer.getCpf());
     if (customerExists.isEmpty()) {
       objResponse.status = HttpStatus.NOT_FOUND;
       objResponse.messageError = "Customer not found";
@@ -110,7 +102,6 @@ public class CustomerController {
     }
 
     BeanUtils.copyProperties(customer, customerExists.get());
-
     customerExists.get().setUpdated_at(LocalDateTime.now());
     customerRepository.save(customerExists.get());
     objResponse.status  = HttpStatus.OK;
@@ -121,12 +112,7 @@ public class CustomerController {
   @DeleteMapping("/delete")
   public ResponseEntity<Object> deleteCustomer(String cpf){
 
-    Optional<CustomerModel> customerExists = customerRepository.findByCpf(cpf);
-
-    var objResponse = new Object() {
-      public HttpStatus status;
-      public String messageError;
-    };
+    var customerExists = customerRepository.findByCpf(cpf);
 
     // Verificando se o cliente existe
     if(customerExists.isEmpty()){
@@ -144,7 +130,7 @@ public class CustomerController {
 
   @GetMapping("/list")
   public ResponseEntity<Object> getAllCustomers(){
-    List<CustomerModel> customers = customerRepository.findAll();
+    var customers = customerRepository.findAll();
     return ResponseEntity.status(HttpStatus.OK).body(customers);
   }
   @GetMapping("{param}")
