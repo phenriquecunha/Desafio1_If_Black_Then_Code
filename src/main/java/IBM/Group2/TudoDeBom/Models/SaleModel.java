@@ -1,5 +1,6 @@
 package IBM.Group2.TudoDeBom.Models;
 
+import IBM.Group2.TudoDeBom.Dtos.ObjProduct;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 @Data
 @Entity

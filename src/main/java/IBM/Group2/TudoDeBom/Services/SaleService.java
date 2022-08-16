@@ -1,5 +1,6 @@
 package IBM.Group2.TudoDeBom.Services;
 
+import IBM.Group2.TudoDeBom.Dtos.ObjProduct;
 import IBM.Group2.TudoDeBom.Repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,17 +13,16 @@ public class SaleService {
 
   @Autowired
   ProductRepository productRepository;
-  public Double getTotalPrice(ArrayList<UUID> products){
-    Double totalPrice = 0.0;
-    for(UUID product : products){
-      var productModel = productRepository.findById(product);
+  public Double getTotalPrice(ArrayList<ObjProduct> products){
+    double totalPrice = 0.0;
+    for(var objProduct : products){
+      var productModel = productRepository.findById(objProduct.getId());
       if(productModel.get().isGeneric()){
-        totalPrice += (productModel.get().getPrice() * 0.8);
+        totalPrice += ((productModel.get().getPrice() * 0.8) * objProduct.getAmount());
       }else{
-        totalPrice += productModel.get().getPrice();
+        totalPrice += (productModel.get().getPrice() * objProduct.getAmount());
       }
     }
     return totalPrice;
   }
-
 }
