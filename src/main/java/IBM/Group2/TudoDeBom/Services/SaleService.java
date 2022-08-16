@@ -1,12 +1,12 @@
 package IBM.Group2.TudoDeBom.Services;
 
-import IBM.Group2.TudoDeBom.Dtos.ObjProduct;
-import IBM.Group2.TudoDeBom.Repositories.ProductRepository;
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import IBM.Group2.TudoDeBom.Dtos.ObjProduct;
+import IBM.Group2.TudoDeBom.Repositories.ProductRepository;
 
 @Service
 public class SaleService {

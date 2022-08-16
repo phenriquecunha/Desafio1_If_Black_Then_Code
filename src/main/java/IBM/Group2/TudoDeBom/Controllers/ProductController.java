@@ -1,16 +1,27 @@
 package IBM.Group2.TudoDeBom.Controllers;
 
-import IBM.Group2.TudoDeBom.Dtos.ProductDto;
-import IBM.Group2.TudoDeBom.Models.ProductModel;
-import IBM.Group2.TudoDeBom.Repositories.ProductRepository;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import IBM.Group2.TudoDeBom.Dtos.ProductDto;
+import IBM.Group2.TudoDeBom.Models.ProductModel;
+import IBM.Group2.TudoDeBom.Repositories.ProductRepository;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/product")
@@ -21,6 +32,12 @@ public class ProductController {
 
   ObjResponse objResponse = new ObjResponse();
 
+  @ApiOperation(value = "Insert a new product in the database given it's name, price, stock amount and whether it's generic (if it's a medication) or not")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Product added successfully"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @PostMapping("/create")
   public ResponseEntity<Object> createProduct(@RequestBody ProductDto product){
 
@@ -57,6 +74,12 @@ public class ProductController {
 
   }
 
+  @ApiOperation(value = "Change a product information")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Product changed successfully"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @PutMapping("/update")
   public ResponseEntity<Object> updateProduct(@RequestBody ProductDto product){
 
@@ -90,6 +113,12 @@ public class ProductController {
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
+  @ApiOperation(value = "Delete a product based on it's ID")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Product deleted successfully"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<Object> deleteProduct(@PathVariable UUID id){
 
@@ -107,12 +136,23 @@ public class ProductController {
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
+  @ApiOperation(value = "List all products in the database")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Query OK"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @GetMapping("/list")
   public ResponseEntity<Object> getAllProducts(){
     var products = productRepository.findAll();
     return ResponseEntity.ok().body(products);
   }
-
+  @ApiOperation(value = "List a product based on it's ID")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Query OK"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @GetMapping("/id/{id}")
   public ResponseEntity<Object> getProductById(@PathVariable UUID id){
     if(productRepository.existsById(id)){
@@ -123,7 +163,12 @@ public class ProductController {
     objResponse.message = "Product not found";
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
-
+  @ApiOperation(value = "List a product based on it's name")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Query OK"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @GetMapping("/name/{name}")
   public ResponseEntity<Object> getProductByName(@PathVariable String name){
     objResponse.target = null;
@@ -138,6 +183,12 @@ public class ProductController {
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
+  @ApiOperation(value = "Add a prefered quantity of the product defined by it's id into the stock")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Product added into the stock"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @PostMapping("/{id}/add/{quantity}")
   public ResponseEntity<Object> addQuantity(@PathVariable UUID id, @PathVariable int quantity){
     objResponse.target = null;
