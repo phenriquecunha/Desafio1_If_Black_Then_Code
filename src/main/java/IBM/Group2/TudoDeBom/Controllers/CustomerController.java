@@ -37,7 +37,7 @@ public class CustomerController {
   @ApiOperation(value = "Create a new customer given it's name, email, phone and document ID (CPF)")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Customer created successfully"),
-    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 403, message = "Customer already exists"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
   @PostMapping("/create")
@@ -90,7 +90,7 @@ public class CustomerController {
   @ApiOperation(value = "Change a customer information")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Customer edited successfully"),
-    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 404, message = "Customer not found"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
   @PutMapping("/update")
@@ -135,7 +135,7 @@ public class CustomerController {
   @ApiOperation(value = "Delete a customer from the database based on it's ID")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Customer deleted successfully"),
-    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 404, message = "Customer not found"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
   @DeleteMapping("/delete/{id}")
@@ -175,7 +175,7 @@ public class CustomerController {
   @ApiOperation(value = "List a specific customer based on it's ID or CPF")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Query OK"),
-    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 404, message = "Customer not found"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
   @GetMapping("/{param}")

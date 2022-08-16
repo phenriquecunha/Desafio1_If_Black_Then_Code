@@ -119,7 +119,7 @@ public class SaleController {
   @ApiOperation(value = "List a specific sell based on it's ID")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Query OK"),
-    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 404, message = "Sale not found"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
   @GetMapping("/{id}")

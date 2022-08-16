@@ -35,7 +35,7 @@ public class ProductController {
   @ApiOperation(value = "Insert a new product in the database given it's name, price, stock amount and whether it's generic (if it's a medication) or not")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Product added successfully"),
-    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 403, message = "Product already exists"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
   @PostMapping("/create")
@@ -116,7 +116,7 @@ public class ProductController {
   @ApiOperation(value = "Delete a product based on it's ID")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Product deleted successfully"),
-    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 404, message = "Product not found"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
   @DeleteMapping("/delete/{id}")
@@ -150,7 +150,7 @@ public class ProductController {
   @ApiOperation(value = "List a product based on it's ID")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Query OK"),
-    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 404, message = "Product not found"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
   @GetMapping("/id/{id}")
@@ -166,7 +166,7 @@ public class ProductController {
   @ApiOperation(value = "List a product based on it's name")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Query OK"),
-    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 404, message = "Product not found"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
   @GetMapping("/name/{name}")
@@ -186,7 +186,7 @@ public class ProductController {
   @ApiOperation(value = "Add a prefered quantity of the product defined by it's id into the stock")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Product added into the stock"),
-    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 404, message = "Product not found"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
   @PostMapping("/{id}/add/{quantity}")
