@@ -12,14 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
-
   @Autowired
   CustomerRepository customerRepository;
 
@@ -28,33 +26,36 @@ public class CustomerController {
   @PostMapping("/create")
   public ResponseEntity<Object> createCustomer(@RequestBody @Valid CustomerDto customer){
 
+    objResponse.target = null;
+
     // Verificando se o cliente já existe no banco de dados
     var customerExists = customerRepository.findByCpf(customer.getCpf());
     if(customerExists.isPresent()){
+      objResponse.target = customerExists.get();
       objResponse.status  = HttpStatus.FORBIDDEN;
-      objResponse.messageError = "Customer already exists";
+      objResponse.message = "Customer already exists";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
 
     // Validando os atributos do cliente no corpo da requisição
     if(customer.getName() == null){
       objResponse.status  = HttpStatus.BAD_REQUEST;
-      objResponse.messageError = "Customer without name attribute";
+      objResponse.message = "Customer without name attribute";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
     if(customer.getEmail() == null){
       objResponse.status  = HttpStatus.BAD_REQUEST;
-      objResponse.messageError = "Customer without email attribute";
+      objResponse.message = "Customer without email attribute";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
     if(customer.getCpf() == null){
       objResponse.status  = HttpStatus.BAD_REQUEST;
-      objResponse.messageError = "Customer without cpf attribute";
+      objResponse.message = "Customer without cpf attribute";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
     if(customer.getTel() == null){
       objResponse.status  = HttpStatus.BAD_REQUEST;
-      objResponse.messageError = "Customer without telephone attribute";
+      objResponse.message = "Customer without telephone attribute";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
 
@@ -63,68 +64,71 @@ public class CustomerController {
     BeanUtils.copyProperties(customer, customerModel);
 
     customerModel.setCreated_at(LocalDateTime.now());
-    customerRepository.save(customerModel);
-
+    objResponse.target = customerRepository.save(customerModel);
     objResponse.status  = HttpStatus.CREATED;
-    objResponse.messageError = "Customer created successfully";
+    objResponse.message = "Customer created successfully";
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
   @PutMapping("/update")
   public ResponseEntity<Object> updateCustomer(@RequestBody @Valid CustomerDto customer) {
-
+    objResponse.target = null;
     var customerExists = customerRepository.findByCpf(customer.getCpf());
     if (customerExists.isEmpty()) {
       objResponse.status = HttpStatus.NOT_FOUND;
-      objResponse.messageError = "Customer not found";
+      objResponse.message = "Customer not found";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
     // Validando os atributos do cliente no corpo da requisição
     if(customer.getName() == null){
       objResponse.status  = HttpStatus.BAD_REQUEST;
-      objResponse.messageError = "Customer without name attribute";
+      objResponse.message = "Customer without name attribute";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
     if(customer.getEmail() == null){
       objResponse.status  = HttpStatus.BAD_REQUEST;
-      objResponse.messageError = "Customer without email attribute";
+      objResponse.message = "Customer without email attribute";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
     if(customer.getCpf() == null){
       objResponse.status  = HttpStatus.BAD_REQUEST;
-      objResponse.messageError = "Customer without cpf attribute";
+      objResponse.message = "Customer without cpf attribute";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
     if(customer.getTel() == null){
       objResponse.status  = HttpStatus.BAD_REQUEST;
-      objResponse.messageError = "Customer without telephone attribute";
+      objResponse.message = "Customer without telephone attribute";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
 
     BeanUtils.copyProperties(customer, customerExists.get());
     customerExists.get().setUpdated_at(LocalDateTime.now());
-    customerRepository.save(customerExists.get());
+    objResponse.target = customerRepository.save(customerExists.get());
     objResponse.status  = HttpStatus.OK;
-    objResponse.messageError = "Customer updated successfully";
+    objResponse.message = "Customer updated successfully";
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
-  @DeleteMapping("/delete")
-  public ResponseEntity<Object> deleteCustomer(String cpf){
-
-    var customerExists = customerRepository.findByCpf(cpf);
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<Object> deleteCustomer(@PathVariable UUID id){
+    objResponse.target = null;
+    var customerExists = customerRepository.findById(id);
 
     // Verificando se o cliente existe
     if(customerExists.isEmpty()){
       objResponse.status = HttpStatus.NOT_FOUND;
-      objResponse.messageError = "Customer not found";
+      objResponse.message = "Customer not found";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
 
+    //TODO mostrar dados do cliente excluido (mudar config do hibernate)
+
     // Efetivando a exclusão do cliente
-    customerRepository.deleteByCpf(cpf);
+    customerExists.get().setSales(null);
+    objResponse.target = customerExists.get();
+    customerRepository.deleteById(id);
     objResponse.status = HttpStatus.OK;
-    objResponse.messageError = "Customer deleted successfully";
+    objResponse.message = "Customer deleted successfully";
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
@@ -135,6 +139,7 @@ public class CustomerController {
   }
   @GetMapping("/{param}")
   public ResponseEntity<Object> getCustomerByCpf(@PathVariable String param){
+    objResponse.target = null;
     Optional<CustomerModel> customer;
 
     // Possibilitando a pesquisa de cliente peloID no banco de dados ou pelo cpf através da mesma rota
@@ -146,13 +151,8 @@ public class CustomerController {
 
     // Verificando se o cliente existe no banco de dados
     if(customer.isEmpty()){
-      var objResponse = new Object() {
-        public HttpStatus status;
-        public String messageError;
-      };
-
       objResponse.status = HttpStatus.NOT_FOUND;
-      objResponse.messageError = "Customer not found";
+      objResponse.message = "Customer not found";
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
 

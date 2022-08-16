@@ -6,5 +6,6 @@ import org.springframework.http.HttpStatus;
 @Data
 public class ObjResponse {
   public HttpStatus status;
-  public String messageError;
+  public String message;
+  public Object target;
 }
