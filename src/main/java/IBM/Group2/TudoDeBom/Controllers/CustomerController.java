@@ -1,19 +1,30 @@
 package IBM.Group2.TudoDeBom.Controllers;
 
-import IBM.Group2.TudoDeBom.Dtos.CustomerDto;
-import IBM.Group2.TudoDeBom.Models.CustomerModel;
-import IBM.Group2.TudoDeBom.Repositories.CustomerRepository;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
+import IBM.Group2.TudoDeBom.Dtos.CustomerDto;
+import IBM.Group2.TudoDeBom.Models.CustomerModel;
+import IBM.Group2.TudoDeBom.Repositories.CustomerRepository;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/customer")
@@ -23,6 +34,12 @@ public class CustomerController {
 
   ObjResponse objResponse = new ObjResponse();
 
+  @ApiOperation(value = "Create a new customer given it's name, email, phone and document ID (CPF)")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Customer created successfully"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @PostMapping("/create")
   public ResponseEntity<Object> createCustomer(@RequestBody @Valid CustomerDto customer){
 
@@ -70,6 +87,12 @@ public class CustomerController {
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
+  @ApiOperation(value = "Change a customer information")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Customer edited successfully"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @PutMapping("/update")
   public ResponseEntity<Object> updateCustomer(@RequestBody @Valid CustomerDto customer) {
     objResponse.target = null;
@@ -109,6 +132,12 @@ public class CustomerController {
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
+  @ApiOperation(value = "Delete a customer from the database based on it's ID")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Customer deleted successfully"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<Object> deleteCustomer(@PathVariable UUID id){
     objResponse.target = null;
@@ -132,11 +161,23 @@ public class CustomerController {
     return ResponseEntity.status(objResponse.status).body(objResponse);
   }
 
+  @ApiOperation(value = "List all customers in the database")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Query OK"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @GetMapping("/list")
   public ResponseEntity<Object> getAllCustomers(){
     var customers = customerRepository.findAll();
     return ResponseEntity.ok().body(customers);
   }
+  @ApiOperation(value = "List a specific customer based on it's ID or CPF")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Query OK"),
+    @ApiResponse(code = 403, message = "User not allowed to perform this action"),
+    @ApiResponse(code = 500, message = "There was an internal server error"),
+})
   @GetMapping("/{param}")
   public ResponseEntity<Object> getCustomerByCpf(@PathVariable String param){
     objResponse.target = null;
