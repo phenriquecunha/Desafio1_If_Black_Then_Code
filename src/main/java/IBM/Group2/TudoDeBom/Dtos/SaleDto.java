@@ -1,10 +1,9 @@
 package IBM.Group2.TudoDeBom.Dtos;
 
-import lombok.Data;
-
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.UUID;
+
+import lombok.Data;
 
 @Data
 public class SaleDto {
