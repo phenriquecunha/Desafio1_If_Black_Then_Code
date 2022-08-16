@@ -44,7 +44,7 @@ public class SaleController {
 
   @ApiOperation(value = "Create a new sell given it's customer, payment type and products")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "Sell added into the database"),
+    @ApiResponse(code = 201, message = "Sell added into the database"),
     @ApiResponse(code = 403, message = "User not allowed to perform this action"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })

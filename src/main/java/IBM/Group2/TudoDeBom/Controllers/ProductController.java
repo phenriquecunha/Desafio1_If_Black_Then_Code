@@ -34,7 +34,7 @@ public class ProductController {
 
   @ApiOperation(value = "Insert a new product in the database given it's name, price, stock amount and whether it's generic (if it's a medication) or not")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "Product added successfully"),
+    @ApiResponse(code = 201, message = "Product added successfully"),
     @ApiResponse(code = 403, message = "Product already exists"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })

@@ -36,7 +36,7 @@ public class CustomerController {
 
   @ApiOperation(value = "Create a new customer given it's name, email, phone and document ID (CPF)")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "Customer created successfully"),
+    @ApiResponse(code = 201, message = "Customer created successfully"),
     @ApiResponse(code = 403, message = "Customer already exists"),
     @ApiResponse(code = 500, message = "There was an internal server error"),
 })
