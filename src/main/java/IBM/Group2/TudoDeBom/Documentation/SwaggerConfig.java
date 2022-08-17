@@ -25,7 +25,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
           .select()
-          .apis(RequestHandlerSelectors.basePackage("IBM.Group2.TudoDeBom.Controllers"))
+          .apis(RequestHandlerSelectors.basePackage("IBM.Group2.TudoDeBom"))
           .paths(PathSelectors.any())
           .build()
           .useDefaultResponseMessages(false)
