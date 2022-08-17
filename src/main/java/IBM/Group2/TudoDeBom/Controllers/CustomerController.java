@@ -150,8 +150,6 @@ public class CustomerController {
       return ResponseEntity.status(objResponse.status).body(objResponse);
     }
 
-    //TODO mostrar dados do cliente excluido (mudar config do hibernate)
-
     // Efetivando a exclusão do cliente
     customerExists.get().setSales(null);
     objResponse.target = customerExists.get();
